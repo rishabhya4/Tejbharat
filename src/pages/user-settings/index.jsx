@@ -1,0 +1,294 @@
+import React, { useState, useEffect } from 'react';
+import HeaderNavigation from '../../components/ui/HeaderNavigation';
+import ContextualBreadcrumbs from '../../components/ui/ContextualBreadcrumbs';
+import DisplayPreferences from './components/DisplayPreferences';
+import NotificationSettings from './components/NotificationSettings';
+import PrivacyControls from './components/PrivacyControls';
+import AccountManagement from './components/AccountManagement';
+import LocalizationSettings from './components/LocalizationSettings';
+import Icon from '../../components/AppIcon';
+import Button from '../../components/ui/Button';
+
+const UserSettings = () => {
+  const [settings, setSettings] = useState({
+    display: {
+      theme: 'light',
+      fontSize: 'medium',
+      layoutDensity: 'comfortable',
+      showArticlePreview: true,
+      imageQuality: 'high'
+    },
+    notifications: {
+      breakingNews: true,
+      dailyDigest: true,
+      categoryUpdates: false,
+      bookmarkReminders: true,
+      deliveryTime: 'immediate',
+      subscribedCategories: ['Technology', 'Politics', 'Business'],
+      quietHours: {
+        enabled: true,
+        startTime: '22:00',
+        endTime: '08:00'
+      }
+    },
+    privacy: {
+      analytics: true,
+      personalization: true,
+      locationData: false,
+      socialSharing: true,
+      cookies: {
+        essential: true,
+        analytics: true,
+        marketing: false,
+        preferences: true
+      },
+      dataRetention: '1year'
+    },
+    account: {
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      bio: 'News enthusiast and technology professional',
+      subscription: 'free'
+    },
+    localization: {
+      language: 'en',
+      timezone: 'UTC-5',
+      dateFormat: 'MM/DD/YYYY',
+      timeFormat: '12h',
+      region: 'us',
+      showLocalNews: true
+    }
+  });
+
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastSaved, setLastSaved] = useState(new Date());
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+
+  const handleSettingsChange = (section, newSettings) => {
+    setSettings(prev => ({
+      ...prev,
+      [section]: newSettings
+    }));
+    setHasUnsavedChanges(true);
+  };
+
+  const handleSaveSettings = () => {
+    setIsAutoSaving(true);
+    // Simulate API call
+    setTimeout(() => {
+      setHasUnsavedChanges(false);
+      setLastSaved(new Date());
+      setIsAutoSaving(false);
+      alert('Settings saved successfully!');
+    }, 1000);
+  };
+
+  const handleResetSettings = () => {
+    if (window.confirm('Are you sure you want to reset all settings to default values? This action cannot be undone.')) {
+      setSettings({
+        display: {
+          theme: 'light',
+          fontSize: 'medium',
+          layoutDensity: 'comfortable',
+          showArticlePreview: true,
+          imageQuality: 'high'
+        },
+        notifications: {
+          breakingNews: true,
+          dailyDigest: true,
+          categoryUpdates: false,
+          bookmarkReminders: true,
+          deliveryTime: 'immediate',
+          subscribedCategories: [],
+          quietHours: {
+            enabled: false,
+            startTime: '22:00',
+            endTime: '08:00'
+          }
+        },
+        privacy: {
+          analytics: false,
+          personalization: false,
+          locationData: false,
+          socialSharing: false,
+          cookies: {
+            essential: true,
+            analytics: false,
+            marketing: false,
+            preferences: false
+          },
+          dataRetention: '30days'
+        },
+        account: {
+          name: '',
+          email: '',
+          bio: '',
+          subscription: 'free'
+        },
+        localization: {
+          language: 'en',
+          timezone: 'UTC+0',
+          dateFormat: 'MM/DD/YYYY',
+          timeFormat: '12h',
+          region: 'us',
+          showLocalNews: false
+        }
+      });
+      setHasUnsavedChanges(true);
+    }
+  };
+
+  // Auto-save functionality
+  useEffect(() => {
+    if (hasUnsavedChanges) {
+      const autoSaveTimer = setTimeout(() => {
+        handleSaveSettings();
+      }, 5000); // Auto-save after 5 seconds of inactivity
+
+      return () => clearTimeout(autoSaveTimer);
+    }
+  }, [settings, hasUnsavedChanges]);
+
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  return (
+    <div className="min-h-screen bg-surface">
+      <HeaderNavigation />
+      
+      <main className="pt-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <ContextualBreadcrumbs />
+          
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-3xl font-bold text-primary">Settings</h1>
+                <p className="text-text-secondary mt-2">
+                  Customize your NewsHub experience and manage your account preferences
+                </p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant="outline"
+                  onClick={handleResetSettings}
+                  iconName="RotateCcw"
+                >
+                  Reset All
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleSaveSettings}
+                  disabled={!hasUnsavedChanges || isAutoSaving}
+                  iconName={isAutoSaving ? "Loader2" : "Save"}
+                  className={isAutoSaving ? "animate-spin" : ""}
+                >
+                  {isAutoSaving ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </div>
+
+            {/* Status Bar */}
+            <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
+              <div className="flex items-center space-x-4">
+                <div className={`status-indicator ${hasUnsavedChanges ? 'status-syncing' : 'status-online'}`}>
+                  <div className={`w-2 h-2 rounded-full mr-2 ${hasUnsavedChanges ? 'bg-warning' : 'bg-success'}`}></div>
+                  <span>{hasUnsavedChanges ? 'Unsaved changes' : 'All changes saved'}</span>
+                </div>
+                <div className="text-sm text-text-secondary">
+                  Last saved: {lastSaved.toLocaleTimeString()}
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-text-secondary">
+                <Icon name="Info" size={14} />
+                <span>Changes are auto-saved after 5 seconds</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Settings Sections */}
+          <div className="space-y-6">
+            <DisplayPreferences 
+              settings={settings} 
+              onSettingsChange={handleSettingsChange} 
+            />
+            
+            <NotificationSettings 
+              settings={settings} 
+              onSettingsChange={handleSettingsChange} 
+            />
+            
+            <PrivacyControls 
+              settings={settings} 
+              onSettingsChange={handleSettingsChange} 
+            />
+            
+            <LocalizationSettings 
+              settings={settings} 
+              onSettingsChange={handleSettingsChange} 
+            />
+            
+            <AccountManagement 
+              settings={settings} 
+              onSettingsChange={handleSettingsChange} 
+            />
+          </div>
+
+          {/* Help Section */}
+          <div className="mt-12 p-6 bg-background rounded-lg border border-border">
+            <div className="flex items-center space-x-3 mb-4">
+              <Icon name="HelpCircle" size={20} className="text-accent" />
+              <h3 className="text-lg font-semibold text-primary">Need Help?</h3>
+            </div>
+            <p className="text-text-secondary mb-4">
+              If you're having trouble with any settings or need assistance, we're here to help.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" iconName="Book">
+                Documentation
+              </Button>
+              <Button variant="outline" iconName="MessageCircle">
+                Contact Support
+              </Button>
+              <Button variant="outline" iconName="Video">
+                Video Tutorials
+              </Button>
+              <Button variant="outline" iconName="Users">
+                Community Forum
+              </Button>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <footer className="mt-12 pt-8 border-t border-border text-center text-sm text-text-secondary">
+            <p>
+              © {new Date().getFullYear()} NewsHub. All rights reserved. 
+              <span className="mx-2">•</span>
+              <a href="#" className="text-accent hover:text-accent/80">Privacy Policy</a>
+              <span className="mx-2">•</span>
+              <a href="#" className="text-accent hover:text-accent/80">Terms of Service</a>
+              <span className="mx-2">•</span>
+              <a href="#" className="text-accent hover:text-accent/80">Cookie Policy</a>
+            </p>
+            <p className="mt-2">
+              Version 2.1.0 • Last updated: March 15, 2024
+            </p>
+          </footer>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default UserSettings;
