@@ -100,13 +100,13 @@ const HeaderNavigation = () => {
             >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:bg-accent/90 transition-colors duration-200 overflow-hidden">
                 <img 
-                  src="/assets/images/image-1751125145285.png" 
-                  alt="NewsHub Logo" 
+                  src="/assets/images/IMG-20250625-WA0014.jpg" 
+                  alt="तेज भारत NETWORK Logo" 
                   className="w-full h-full object-contain"
                 />
               </div>
               <span className="text-xl font-heading font-bold text-primary group-hover:text-accent transition-colors duration-200">
-                NewsHub
+               तेज भारत NETWORK
               </span>
             </Link>
           </div>
