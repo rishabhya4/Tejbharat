@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Image from '../../../components/AppImage';
-
 import Button from '../../../components/ui/Button';
 
 const ArticleCard = ({ article, onBookmark, onShare }) => {
@@ -21,7 +20,7 @@ const ArticleCard = ({ article, onBookmark, onShare }) => {
     const now = new Date();
     const published = new Date(date);
     const diffInHours = Math.floor((now - published) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return 'Just now';
     if (diffInHours < 24) return `${diffInHours}h ago`;
     const diffInDays = Math.floor(diffInHours / 24);
@@ -76,13 +75,13 @@ const ArticleCard = ({ article, onBookmark, onShare }) => {
             <span>{article.readTime} min read</span>
           </div>
 
-          {/* Title */}
-          <h3 className="text-lg font-semibold text-primary mb-2 line-clamp-2 group-hover:text-accent transition-colors duration-200">
+          {/* Title with hover effect */}
+          <h3 className="text-lg font-normal text-black group-hover:text-red-600 transition-colors duration-200 mb-2 line-clamp-2">
             {article.title}
           </h3>
 
           {/* Summary */}
-          <p className="text-text-secondary text-sm line-clamp-3 mb-4">
+          <p className="text-normal text-text-secondary text-sm line-clamp-3 mb-4">
             {article.summary}
           </p>
 
