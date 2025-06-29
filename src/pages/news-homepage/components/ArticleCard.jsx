@@ -119,7 +119,7 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
         {/* Article Content */}
         <div className="p-4">
           {/* Article Title */}
-          <h3 className="text-lg font-heading font-semibold text-primary mb-2 line-clamp-2 group-hover:text-accent transition-colors duration-200">
+          <h3 className="text-lg font-article font-normal text-black group-hover:text-red-600 transition-colors duration-200">
             {article.title}
           </h3>
 
