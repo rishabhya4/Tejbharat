@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
@@ -6,12 +6,56 @@ import Button from '../../../components/ui/Button';
 
 const BookmarkCard = ({ bookmark, onRemove, onToggleRead, onShare, isSelected, onSelect }) => {
   const [isRemoving, setIsRemoving] = useState(false);
+  const [isTogglingRead, setIsTogglingRead] = useState(false);
 
-  const handleRemove = async () => {
+  const handleRemove = useCallback(async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isRemoving) return;
+    
     setIsRemoving(true);
-    await onRemove(bookmark.id);
-    setIsRemoving(false);
-  };
+    try {
+      await onRemove?.(bookmark?.id);
+    } catch (error) {
+      console.error('Remove bookmark failed:', error);
+    } finally {
+      setIsRemoving(false);
+    }
+  }, [isRemoving, onRemove, bookmark?.id]);
+
+  const handleToggleRead = useCallback(async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isTogglingRead) return;
+    
+    setIsTogglingRead(true);
+    try {
+      await onToggleRead?.(bookmark?.id);
+    } catch (error) {
+      console.error('Toggle read status failed:', error);
+    } finally {
+      setIsTogglingRead(false);
+    }
+  }, [isTogglingRead, onToggleRead, bookmark?.id]);
+
+  const handleShare = useCallback(async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    try {
+      await onShare?.(bookmark);
+    } catch (error) {
+      console.error('Share bookmark failed:', error);
+    }
+  }, [onShare, bookmark]);
+
+  const handleSelect = useCallback((e) => {
+    if (onSelect) {
+      onSelect(bookmark?.id, e.target.checked);
+    }
+  }, [onSelect, bookmark?.id]);
 
   const formatDate = (date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -23,9 +67,13 @@ const BookmarkCard = ({ bookmark, onRemove, onToggleRead, onShare, isSelected, o
 
   const getReadingTime = (content) => {
     const wordsPerMinute = 200;
-    const words = content.split(' ').length;
+    const words = content?.split(' ')?.length || 0;
     return Math.ceil(words / wordsPerMinute);
   };
+
+  if (!bookmark) {
+    return null;
+  }
 
   return (
     <div className={`news-card p-4 transition-all duration-200 ${isSelected ? 'ring-2 ring-accent bg-accent/5' : ''}`}>
@@ -34,8 +82,8 @@ const BookmarkCard = ({ bookmark, onRemove, onToggleRead, onShare, isSelected, o
         <div className="flex-shrink-0 pt-1">
           <input
             type="checkbox"
-            checked={isSelected}
-            onChange={(e) => onSelect(bookmark.id, e.target.checked)}
+            checked={isSelected || false}
+            onChange={handleSelect}
             className="w-4 h-4 text-accent bg-background border-border rounded focus:ring-accent focus:ring-2"
           />
         </div>
@@ -146,17 +194,18 @@ const BookmarkCard = ({ bookmark, onRemove, onToggleRead, onShare, isSelected, o
         <div className="flex items-center space-x-2">
           <Button
             variant="ghost"
-            onClick={() => onToggleRead(bookmark.id)}
+            onClick={handleToggleRead}
+            disabled={isTogglingRead}
             className="text-xs px-2 py-1"
-            iconName={bookmark.isRead ? "Eye" : "EyeOff"}
+            iconName={isTogglingRead ? "Loader2" : (bookmark.isRead ? "Eye" : "EyeOff")}
             iconSize={14}
           >
-            {bookmark.isRead ? 'Mark Unread' : 'Mark Read'}
+            {isTogglingRead ? 'Loading...' : (bookmark.isRead ? 'Mark Unread' : 'Mark Read')}
           </Button>
           
           <Button
             variant="ghost"
-            onClick={() => onShare(bookmark)}
+            onClick={handleShare}
             className="text-xs px-2 py-1"
             iconName="Share2"
             iconSize={14}

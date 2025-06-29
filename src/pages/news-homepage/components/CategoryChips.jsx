@@ -74,17 +74,17 @@ const CategoryChips = () => {
           <Icon name="ChevronLeft" size={16} className="text-text-secondary" />
         </button>
 
-        {/* Categories Container */}
+        {/* Categories Container - Fixed for mobile */}
         <div
           ref={scrollContainerRef}
-          className="flex space-x-3 overflow-x-auto scrollbar-hide scroll-smooth flex-1"
+          className="flex space-x-2 sm:space-x-3 overflow-x-auto scrollbar-hide scroll-smooth flex-1 py-1"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {categories.map((category) => (
             <Link
               key={category.name}
               to={category.path}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target ${
+              className={`flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target flex-shrink-0 ${
                 isActiveCategory(category.path)
                   ? 'bg-accent text-white shadow-sm'
                   : 'bg-surface text-text-secondary hover:bg-neutral-200 hover:text-primary border border-border'
@@ -92,10 +92,10 @@ const CategoryChips = () => {
             >
               <Icon 
                 name={category.icon} 
-                size={16} 
+                size={14} 
                 className={isActiveCategory(category.path) ? 'text-white' : 'text-text-secondary'} 
               />
-              <span>{category.name}</span>
+              <span className="text-xs sm:text-sm">{category.name}</span>
             </Link>
           ))}
         </div>

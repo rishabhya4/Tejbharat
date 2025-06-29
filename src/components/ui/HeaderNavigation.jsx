@@ -98,8 +98,12 @@ const HeaderNavigation = () => {
               className="flex items-center space-x-2 group"
               onClick={closeMobileMenu}
             >
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center group-hover:bg-accent/90 transition-colors duration-200">
-                <Icon name="Newspaper" size={20} color="white" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:bg-accent/90 transition-colors duration-200 overflow-hidden">
+                <img 
+                  src="/assets/images/image-1751125145285.png" 
+                  alt="NewsHub Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-heading font-bold text-primary group-hover:text-accent transition-colors duration-200">
                 NewsHub

@@ -1,40 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Image from '../../../components/AppImage';
 import Icon from '../../../components/AppIcon';
 
 const ArticleCard = ({ article, onBookmarkToggle }) => {
-  const [isBookmarked, setIsBookmarked] = useState(article.isBookmarked || false);
+  const [isBookmarked, setIsBookmarked] = useState(article?.isBookmarked || false);
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
 
-  const handleBookmarkClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const newBookmarkState = !isBookmarked;
-    setIsBookmarked(newBookmarkState);
-    if (onBookmarkToggle) {
-      onBookmarkToggle(article.id, newBookmarkState);
-    }
-  };
-
-  const handleShare = (e) => {
+  const handleBookmarkClick = useCallback(async (e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (navigator.share) {
-      navigator.share({
-        title: article.title,
-        text: article.excerpt,
-        url: window.location.origin + `/article-detail-page?id=${article.id}&title=${encodeURIComponent(article.title)}&category=${article.category}`
-      });
-    } else {
-      // Fallback for browsers that don't support Web Share API
-      const url = window.location.origin + `/article-detail-page?id=${article.id}&title=${encodeURIComponent(article.title)}&category=${article.category}`;
-      navigator.clipboard.writeText(url).then(() => {
-        // Could show a toast notification here
-        console.log('Article URL copied to clipboard');
-      });
+    if (isBookmarkLoading) return;
+    
+    setIsBookmarkLoading(true);
+    
+    try {
+      const newBookmarkState = !isBookmarked;
+      setIsBookmarked(newBookmarkState);
+      
+      if (onBookmarkToggle) {
+        await onBookmarkToggle(article?.id, newBookmarkState);
+      }
+    } catch (error) {
+      // Revert state on error
+      setIsBookmarked(isBookmarked);
+      console.error('Bookmark toggle failed:', error);
+    } finally {
+      setIsBookmarkLoading(false);
     }
-  };
+  }, [isBookmarked, isBookmarkLoading, onBookmarkToggle, article?.id]);
+
+  const handleShare = useCallback(async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    try {
+      const shareData = {
+        title: article?.title,
+        text: article?.excerpt,
+        url: `${window.location.origin}/article-detail-page?id=${article?.id}&title=${encodeURIComponent(article?.title || '')}&category=${article?.category || ''}`
+      };
+
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        const url = shareData.url;
+        await navigator.clipboard.writeText(url);
+        
+        // Show a temporary feedback (you could replace this with a toast notification)
+        const shareButton = e.currentTarget;
+        const originalText = shareButton.getAttribute('aria-label');
+        shareButton.setAttribute('aria-label', 'Link copied!');
+        setTimeout(() => {
+          shareButton.setAttribute('aria-label', originalText);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Share failed:', error);
+    }
+  }, [article]);
+
+  if (!article) {
+    return null;
+  }
 
   return (
     <article className="news-card news-card-hover group">
@@ -61,14 +91,19 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
           <div className="absolute top-3 right-3 flex space-x-2">
             <button
               onClick={handleBookmarkClick}
-              className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors duration-200 touch-target"
+              disabled={isBookmarkLoading}
+              className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors duration-200 touch-target disabled:opacity-50"
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
-              <Icon 
-                name={isBookmarked ? 'Bookmark' : 'Bookmark'} 
-                size={16} 
-                className={isBookmarked ? 'text-accent fill-current' : 'text-text-secondary'} 
-              />
+              {isBookmarkLoading ? (
+                <Icon name="Loader2" size={16} className="animate-spin text-text-secondary" />
+              ) : (
+                <Icon 
+                  name="Bookmark" 
+                  size={16} 
+                  className={isBookmarked ? 'text-accent fill-current' : 'text-text-secondary'} 
+                />
+              )}
             </button>
             
             <button
