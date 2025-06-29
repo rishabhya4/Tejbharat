@@ -98,15 +98,15 @@ const HeaderNavigation = () => {
               className="flex items-center space-x-2 group"
               onClick={closeMobileMenu}
             >
-              <div className="w-16 h-16 rounded-lg flex items-center justify-center group-hover:bg-accent/90 transition-colors duration-200 overflow-hidden">
+              <div className="w-16 h-16 rounded-lg flex items-center justify-center transition-colors duration-200 overflow-hidden">
                 <img 
                   src="/assets/images/tej-bharat-network-logo.png" 
                   alt="तेज भारत NETWORK Logo" 
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-xl font-heading font-bold text-primary group-hover:text-accent transition-colors duration-200">
-               तेज भारत NETWORK
+              <span className="text-xl font-heading font-bold text-primary transition-colors duration-200">
+                तेज भारत NETWORK
               </span>
             </Link>
           </div>
