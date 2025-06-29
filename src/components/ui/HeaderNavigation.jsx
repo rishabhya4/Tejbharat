@@ -120,7 +120,7 @@ const HeaderNavigation = () => {
                     onClick={toggleCategoryDropdown}
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 touch-target ${
                       isActiveRoute(item.path)
-                        ? 'text-accent bg-accent/10' :'text-text-secondary hover:text-primary hover:bg-surface'
+                        ? 'text-red-600 bg-red-100' :'text-text-secondary hover:text-red-600 hover:bg-red-50'
                     }`}
                     aria-expanded={isCategoryDropdownOpen}
                     aria-haspopup="true"
@@ -140,7 +140,7 @@ const HeaderNavigation = () => {
                     to={item.path}
                     className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 touch-target ${
                       isActiveRoute(item.path)
-                        ? 'text-accent bg-accent/10' :'text-text-secondary hover:text-primary hover:bg-surface'
+                        ? 'text-red-600 bg-red-100' :'text-text-secondary hover:text-red-600 hover:bg-red-50'
                     }`}
                     onClick={closeMobileMenu}
                   >
@@ -159,10 +159,13 @@ const HeaderNavigation = () => {
                           <Link
                             key={category.path}
                             to={category.path}
-                            className="flex items-center justify-between p-2 rounded-md hover:bg-surface transition-colors duration-200"
+                            className={`flex items-center justify-between p-2 rounded-md transition-colors duration-200 ${
+                              isActiveRoute(category.path)
+                                ? 'text-red-600 bg-red-100' : 'hover:bg-red-50 hover:text-red-600 text-text-primary'
+                            }`}
                             onClick={() => setIsCategoryDropdownOpen(false)}
                           >
-                            <span className="text-sm text-text-primary">{category.label}</span>
+                            <span className="text-sm">{category.label}</span>
                             <span className="text-xs text-text-secondary font-mono">{category.count}</span>
                           </Link>
                         ))}
@@ -170,7 +173,7 @@ const HeaderNavigation = () => {
                       <div className="mt-3 pt-3 border-t border-border">
                         <Link
                           to="/category-browse"
-                          className="text-sm text-accent hover:text-accent/80 font-medium"
+                          className="text-sm text-red-600 hover:text-red-800 font-medium"
                           onClick={() => setIsCategoryDropdownOpen(false)}
                         >
                           View All Categories →
@@ -227,7 +230,7 @@ const HeaderNavigation = () => {
                           onClick={toggleCategoryDropdown}
                           className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-target ${
                             isActiveRoute(item.path)
-                              ? 'text-accent bg-accent/10' :'text-text-secondary hover:text-primary hover:bg-surface'
+                              ? 'text-red-600 bg-red-100' :'text-text-secondary hover:text-red-600 hover:bg-red-50'
                           }`}
                           aria-expanded={isCategoryDropdownOpen}
                         >
@@ -251,7 +254,10 @@ const HeaderNavigation = () => {
                               <Link
                                 key={category.path}
                                 to={category.path}
-                                className="flex items-center justify-between px-4 py-2 rounded-md text-sm text-text-secondary hover:text-primary hover:bg-surface transition-colors duration-200"
+                                className={`flex items-center justify-between px-4 py-2 rounded-md text-sm transition-colors duration-200 ${
+                                  isActiveRoute(category.path)
+                                    ? 'text-red-600 bg-red-100' : 'text-text-secondary hover:text-red-600 hover:bg-red-50'
+                                }`}
                                 onClick={closeMobileMenu}
                               >
                                 <span>{category.label}</span>
@@ -266,7 +272,7 @@ const HeaderNavigation = () => {
                         to={item.path}
                         className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-target ${
                           isActiveRoute(item.path)
-                            ? 'text-accent bg-accent/10' :'text-text-secondary hover:text-primary hover:bg-surface'
+                            ? 'text-red-600 bg-red-100' :'text-text-secondary hover:text-red-600 hover:bg-red-50'
                         }`}
                         onClick={closeMobileMenu}
                       >
