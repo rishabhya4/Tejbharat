@@ -8,14 +8,12 @@ const CategoryBanner = ({ featuredArticle, category }) => {
   const handleBookmark = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Mock bookmark functionality
     console.log('Article bookmarked:', featuredArticle.id);
   };
 
   const handleShare = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Mock share functionality
     console.log('Article shared:', featuredArticle.id);
   };
 
@@ -34,7 +32,7 @@ const CategoryBanner = ({ featuredArticle, category }) => {
   };
 
   return (
-    <div className="relative bg-surface rounded-xl overflow-hidden shadow-lg mb-8">
+    <div className="relative bg-surface rounded-xl overflow-hidden shadow-lg mb-8 group">
       <div className="grid lg:grid-cols-2 gap-0">
         {/* Image Section */}
         <div className="relative h-64 lg:h-80 overflow-hidden">
@@ -44,7 +42,7 @@ const CategoryBanner = ({ featuredArticle, category }) => {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:hidden"></div>
-          
+
           {/* Mobile overlay content */}
           <div className="absolute bottom-4 left-4 right-4 lg:hidden">
             <div className="flex items-center space-x-2 mb-2">
@@ -55,7 +53,7 @@ const CategoryBanner = ({ featuredArticle, category }) => {
                 {featuredArticle.readTime} min read
               </span>
             </div>
-            <h2 className="text-white text-lg font-bold leading-tight mb-2">
+            <h2 className="text-black text-lg font-bold leading-tight mb-2 transition-colors group-hover:text-red-600">
               {featuredArticle.title}
             </h2>
           </div>
@@ -63,7 +61,7 @@ const CategoryBanner = ({ featuredArticle, category }) => {
 
         {/* Content Section */}
         <div className="p-6 lg:p-8 flex flex-col justify-center">
-          {/* Desktop category and meta */}
+          {/* Meta info */}
           <div className="hidden lg:flex items-center space-x-3 mb-4">
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white ${getCategoryColor(category)}`}>
               <Icon name="Tag" size={14} className="mr-1" />
@@ -78,7 +76,7 @@ const CategoryBanner = ({ featuredArticle, category }) => {
           </div>
 
           {/* Desktop title */}
-          <h2 className="hidden lg:block text-2xl xl:text-3xl font-bold text-primary mb-4 leading-tight">
+          <h2 className="hidden lg:block text-2xl xl:text-3xl font-bold text-black mb-4 leading-tight transition-colors group-hover:text-red-600">
             {featuredArticle.title}
           </h2>
 
@@ -87,7 +85,7 @@ const CategoryBanner = ({ featuredArticle, category }) => {
             {featuredArticle.summary}
           </p>
 
-          {/* Author and Actions */}
+          {/* Author + buttons */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Image
