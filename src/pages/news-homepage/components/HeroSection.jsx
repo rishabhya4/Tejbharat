@@ -40,7 +40,7 @@ const HeroSection = ({ featuredArticle }) => {
           <span className="text-sm opacity-80">Featured</span>
         </div>
         
-        <h1 className="text-2xl md:text-3xl font-heading font-bold mb-3 line-clamp-2 group-hover:text-accent transition-colors duration-200">
+        <h1 className="text-2xl md:text-3xl font-heading font-bold mb-3 line-clamp-2 group-hover:text-red-600 transition-colors duration-200">
           {featuredArticle.title}
         </h1>
         
