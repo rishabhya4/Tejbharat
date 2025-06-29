@@ -100,7 +100,7 @@ const HeaderNavigation = () => {
             >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center group-hover:bg-accent/90 transition-colors duration-200 overflow-hidden">
                 <img 
-                  src="/assets/images/IMG-20250625-WA0014.jpg" 
+                  src="/assets/images/tej-bharat-network-logo.png" 
                   alt="तेज भारत NETWORK Logo" 
                   className="w-full h-full object-contain"
                 />
