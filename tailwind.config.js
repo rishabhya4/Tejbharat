@@ -54,10 +54,12 @@ module.exports = {
         'border-muted': '#F1F5F9', // slate-100
       },
       fontFamily: {
-        'heading': ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Open Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        heading: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         'body': ['Source Sans 3', 'system-ui', 'sans-serif'],
         'caption': ['Inter', 'system-ui', 'sans-serif'],
         'mono': ['JetBrains Mono', 'monospace'],
+        'article': ['Inter', 'sans-serif'],
       },
       fontSize: {
         'fluid-xs': 'clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)',
