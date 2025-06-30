@@ -80,24 +80,27 @@ const CategoryChips = () => {
           className="flex space-x-2 sm:space-x-3 overflow-x-auto scrollbar-hide scroll-smooth flex-1 py-1"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {categories.map((category) => (
-            <Link
-              key={category.name}
-              to={category.path}
-              className={`flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target flex-shrink-0 ${
-                isActiveCategory(category.path)
-                  ? 'bg-accent text-white shadow-sm'
-                  : 'bg-surface text-text-secondary hover:bg-neutral-200 hover:text-primary border border-border'
-              }`}
-            >
-              <Icon 
-                name={category.icon} 
-                size={14} 
-                className={isActiveCategory(category.path) ? 'text-white' : 'text-text-secondary'} 
-              />
-              <span className="text-xs sm:text-sm">{category.name}</span>
-            </Link>
-          ))}
+          {categories.map((category) => {
+            const isActive = isActiveCategory(category.path);
+            return (
+              <Link
+                key={category.name}
+                to={category.path}
+                className={`group flex items-center space-x-1 sm:space-x-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-200 touch-target flex-shrink-0 
+                  ${isActive
+                    ? 'bg-red-700 text-white shadow-md'
+                    : 'bg-white text-red-500 border border-red-200 shadow-sm hover:bg-red-50 hover:text-red-600 hover:shadow-md hover:scale-105'}
+                `}
+              >
+                <Icon 
+                  name={category.icon} 
+                  size={14} 
+                  className={isActive ? 'text-white' : 'text-red-500 group-hover:text-red-600'} 
+                />
+                <span className="text-xs sm:text-sm">{category.name}</span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Right Scroll Button */}
