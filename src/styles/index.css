@@ -5,7 +5,7 @@
 body {
   margin: 0;
   padding: 0;
-  @apply font-sans;
+  font-family: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
   font-weight: 400; /* Regular for body */
   background-color: #fff;
   color: #111;
@@ -22,8 +22,43 @@ body {
 
 /* 📰 Bold Headlines (Merriweather Bold) */
 h1, h2, h3, h4, h5, h6, .font-heading {
-  @apply font-heading;
+  font-family: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
   font-weight: 700; /* Bold */
   line-height: 1.3;
   color: #111;
+}
+
+@keyframes neon-pulse-red {
+  0%, 100% {
+    box-shadow: 0 0 8px 0 rgba(239,68,68,0.7), 0 0 16px 2px rgba(239,68,68,0.5);
+  }
+  50% {
+    box-shadow: 0 0 24px 4px rgba(239,68,68,1), 0 0 48px 8px rgba(239,68,68,0.9);
+  }
+}
+
+@keyframes neon-pulse-blue {
+  0%, 100% {
+    box-shadow: 0 0 8px 0 rgba(59,130,246,0.7), 0 0 16px 2px rgba(59,130,246,0.5);
+  }
+  50% {
+    box-shadow: 0 0 24px 4px rgba(59,130,246,1), 0 0 48px 8px rgba(59,130,246,0.9);
+  }
+}
+
+.neon-red-hover {
+  border: 2px solid #000; /* black border by default */
+  box-shadow: none;
+  transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.neon-red-hover:hover {
+  border-color: #ef4444; /* red-500 */
+  animation: neon-pulse-red 1s infinite alternate;
+  transform: scale(1.05);
+}
+
+.neon-red-hover:hover {
+  animation: neon-pulse-red 1s infinite alternate;
+  transform: scale(1.05);
 }
