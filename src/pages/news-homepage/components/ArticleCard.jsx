@@ -7,21 +7,23 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
   const [isBookmarked, setIsBookmarked] = useState(article?.isBookmarked || false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
 
-  // Extra strong popup shadow, no border, no image
-  const cardBaseClass = 'shadow-[0_12px_48px_0_rgba(0,0,0,0.55)] rounded-lg transition-transform duration-300';
-
   const handleBookmarkClick = useCallback(async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
     if (isBookmarkLoading) return;
+    
     setIsBookmarkLoading(true);
+    
     try {
       const newBookmarkState = !isBookmarked;
       setIsBookmarked(newBookmarkState);
+      
       if (onBookmarkToggle) {
         await onBookmarkToggle(article?.id, newBookmarkState);
       }
     } catch (error) {
+      // Revert state on error
       setIsBookmarked(isBookmarked);
       console.error('Bookmark toggle failed:', error);
     } finally {
@@ -32,17 +34,22 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
   const handleShare = useCallback(async (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
     try {
       const shareData = {
         title: article?.title,
         text: article?.excerpt,
         url: `${window.location.origin}/article-detail-page?id=${article?.id}&title=${encodeURIComponent(article?.title || '')}&category=${article?.category || ''}`
       };
+
       if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
         await navigator.share(shareData);
       } else {
+        // Fallback for browsers that don't support Web Share API
         const url = shareData.url;
         await navigator.clipboard.writeText(url);
+        
+        // Show a temporary feedback (you could replace this with a toast notification)
         const shareButton = e.currentTarget;
         const originalText = shareButton.getAttribute('aria-label');
         shareButton.setAttribute('aria-label', 'Link copied!');
@@ -60,7 +67,7 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
   }
 
   return (
-    <article className={`news-card group ${cardBaseClass}`}>
+    <article className="news-card news-card-hover group">
       <Link 
         to={`/article-detail-page?id=${article.id}&title=${encodeURIComponent(article.title)}&category=${article.category}`}
         className="block"
@@ -72,12 +79,14 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
+          
           {/* Category Badge */}
           <div className="absolute top-3 left-3">
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-accent text-white">
               {article.category}
             </span>
           </div>
+
           {/* Action Buttons */}
           <div className="absolute top-3 right-3 flex space-x-2">
             <button
@@ -96,6 +105,7 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
                 />
               )}
             </button>
+            
             <button
               onClick={handleShare}
               className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors duration-200 touch-target"
@@ -105,16 +115,19 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
             </button>
           </div>
         </div>
+
         {/* Article Content */}
-        <div className="p-6">
+        <div className="p-4">
           {/* Article Title */}
-          <h3 className="text-lg font-article font-normal text-black group-hover:text-red-600 transition-colors duration-200 mb-2">
+          <h3 className="text-lg font-article font-normal text-black group-hover:text-red-600 transition-colors duration-200">
             {article.title}
           </h3>
+
           {/* Article Excerpt */}
           <p className="text-sm text-text-secondary mb-3 line-clamp-3">
             {article.excerpt}
           </p>
+
           {/* Article Meta */}
           <div className="flex items-center justify-between text-xs text-text-secondary">
             <div className="flex items-center space-x-2">
@@ -122,6 +135,7 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
               <span>•</span>
               <span>{article.publishedAt}</span>
             </div>
+            
             <div className="flex items-center space-x-1">
               <Icon name="Clock" size={12} />
               <span>{article.readTime}</span>
