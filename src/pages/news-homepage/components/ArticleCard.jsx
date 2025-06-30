@@ -7,8 +7,8 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
   const [isBookmarked, setIsBookmarked] = useState(article?.isBookmarked || false);
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
 
-  // Extra strong popup shadow, no border, no image
-  const cardBaseClass = 'shadow-[0_12px_48px_0_rgba(0,0,0,0.55)] rounded-lg transition-transform duration-300';
+  // Larger card, more prominent shadow, solid background
+  const cardBaseClass = 'shadow-lg rounded-lg transition-transform duration-300 bg-white';
 
   const handleBookmarkClick = useCallback(async (e) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
         className="block"
       >
         {/* Article Image */}
-        <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
+        <div className="relative w-full h-44 overflow-hidden rounded-t-lg">
           <Image
             src={article.image}
             alt={article.title}
@@ -108,22 +108,22 @@ const ArticleCard = ({ article, onBookmarkToggle }) => {
         {/* Article Content */}
         <div className="p-6">
           {/* Article Title */}
-          <h3 className="text-lg font-article font-normal text-black group-hover:text-red-600 transition-colors duration-200 mb-2">
+          <h3 className="text-xl font-article font-normal text-black group-hover:text-red-600 transition-colors duration-200 mb-2">
             {article.title}
           </h3>
           {/* Article Excerpt */}
-          <p className="text-sm text-text-secondary mb-3 line-clamp-3">
+          <p className="text-base text-text-secondary mb-3 line-clamp-3">
             {article.excerpt}
           </p>
           {/* Article Meta */}
-          <div className="flex items-center justify-between text-xs text-text-secondary">
+          <div className="flex items-center justify-between text-sm text-text-secondary">
             <div className="flex items-center space-x-2">
               <span className="font-medium">{article.source}</span>
               <span>•</span>
               <span>{article.publishedAt}</span>
             </div>
             <div className="flex items-center space-x-1">
-              <Icon name="Clock" size={12} />
+              <Icon name="Clock" size={14} />
               <span>{article.readTime}</span>
             </div>
           </div>
