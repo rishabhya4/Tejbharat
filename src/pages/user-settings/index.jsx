@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeaderNavigation from '../../components/ui/HeaderNavigation';
 import ContextualBreadcrumbs from '../../components/ui/ContextualBreadcrumbs';
-import DisplayPreferences from './components/DisplayPreferences';
-import NotificationSettings from './components/NotificationSettings';
-import PrivacyControls from './components/PrivacyControls';
 import AccountManagement from './components/AccountManagement';
 import LocalizationSettings from './components/LocalizationSettings';
 import Icon from '../../components/AppIcon';
@@ -219,21 +216,6 @@ const UserSettings = () => {
 
           {/* Settings Sections */}
           <div className="space-y-6">
-            <DisplayPreferences 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-            
-            <NotificationSettings 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-            
-            <PrivacyControls 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-            
             <LocalizationSettings 
               settings={settings} 
               onSettingsChange={handleSettingsChange} 
