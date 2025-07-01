@@ -1,282 +1,326 @@
-import React, { useState, useEffect } from 'react';
-import HeaderNavigation from '../../components/ui/HeaderNavigation';
-import ContextualBreadcrumbs from '../../components/ui/ContextualBreadcrumbs';
-import PrivacyControls from './components/PrivacyControls';
-import AccountManagement from './components/AccountManagement';
-import LocalizationSettings from './components/LocalizationSettings';
-import Icon from '../../components/AppIcon';
-import Button from '../../components/ui/Button';
+import React, { useState } from 'react';
+import Icon from '../../../components/AppIcon';
 
-const UserSettings = () => {
-  const [settings, setSettings] = useState({
-    display: {
-      theme: 'light',
-      fontSize: 'medium',
-      layoutDensity: 'comfortable',
-      showArticlePreview: true,
-      imageQuality: 'high'
-    },
-    notifications: {
-      breakingNews: true,
-      dailyDigest: true,
-      categoryUpdates: false,
-      bookmarkReminders: true,
-      deliveryTime: 'immediate',
-      subscribedCategories: ['Technology', 'Politics', 'Business'],
-      quietHours: {
-        enabled: true,
-        startTime: '22:00',
-        endTime: '08:00'
-      }
-    },
-    privacy: {
-      analytics: true,
-      personalization: true,
-      locationData: false,
-      socialSharing: true,
-      cookies: {
-        essential: true,
-        analytics: true,
-        marketing: false,
-        preferences: true
-      },
-      dataRetention: '1year'
-    },
-    account: {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      bio: 'News enthusiast and technology professional',
-      subscription: 'free'
-    },
-    localization: {
-      language: 'en',
-      timezone: 'UTC-5',
-      dateFormat: 'MM/DD/YYYY',
-      timeFormat: '12h',
-      region: 'us',
-      showLocalNews: true
-    }
-  });
+const LocalizationSettings = ({ settings, onSettingsChange }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
 
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [lastSaved, setLastSaved] = useState(new Date());
-  const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const languages = [
+    { code: 'en', name: 'English', nativeName: 'English' },
+    { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+    { code: 'mr', name: 'Marathi', nativeName: 'मराठी' },
+  ];
 
-  const handleSettingsChange = (section, newSettings) => {
-    setSettings(prev => ({
-      ...prev,
-      [section]: newSettings
-    }));
-    setHasUnsavedChanges(true);
+  const timezones = [
+    { id: 'UTC-12', name: 'UTC-12:00', location: 'Baker Island' },
+    { id: 'UTC-11', name: 'UTC-11:00', location: 'American Samoa' },
+    { id: 'UTC-10', name: 'UTC-10:00', location: 'Hawaii' },
+    { id: 'UTC-9', name: 'UTC-09:00', location: 'Alaska' },
+    { id: 'UTC-8', name: 'UTC-08:00', location: 'Pacific Time' },
+    { id: 'UTC-7', name: 'UTC-07:00', location: 'Mountain Time' },
+    { id: 'UTC-6', name: 'UTC-06:00', location: 'Central Time' },
+    { id: 'UTC-5', name: 'UTC-05:00', location: 'Eastern Time' },
+    { id: 'UTC-4', name: 'UTC-04:00', location: 'Atlantic Time' },
+    { id: 'UTC-3', name: 'UTC-03:00', location: 'Argentina' },
+    { id: 'UTC-2', name: 'UTC-02:00', location: 'South Georgia' },
+    { id: 'UTC-1', name: 'UTC-01:00', location: 'Azores' },
+    { id: 'UTC+0', name: 'UTC+00:00', location: 'London, Dublin' },
+    { id: 'UTC+1', name: 'UTC+01:00', location: 'Central Europe' },
+    { id: 'UTC+2', name: 'UTC+02:00', location: 'Eastern Europe' },
+    { id: 'UTC+3', name: 'UTC+03:00', location: 'Moscow' },
+    { id: 'UTC+4', name: 'UTC+04:00', location: 'Dubai' },
+    { id: 'UTC+5', name: 'UTC+05:00', location: 'Pakistan' },
+    { id: 'UTC+5:30', name: 'UTC+05:30', location: 'India' },
+    { id: 'UTC+6', name: 'UTC+06:00', location: 'Bangladesh' },
+    { id: 'UTC+7', name: 'UTC+07:00', location: 'Thailand' },
+    { id: 'UTC+8', name: 'UTC+08:00', location: 'China, Singapore' },
+    { id: 'UTC+9', name: 'UTC+09:00', location: 'Japan, Korea' },
+    { id: 'UTC+10', name: 'UTC+10:00', location: 'Australia East' },
+    { id: 'UTC+11', name: 'UTC+11:00', location: 'Solomon Islands' },
+    { id: 'UTC+12', name: 'UTC+12:00', location: 'New Zealand' }
+  ];
+
+  const dateFormats = [
+    { id: 'MM/DD/YYYY', name: 'MM/DD/YYYY', example: '03/15/2024' },
+    { id: 'DD/MM/YYYY', name: 'DD/MM/YYYY', example: '15/03/2024' },
+    { id: 'YYYY-MM-DD', name: 'YYYY-MM-DD', example: '2024-03-15' },
+    { id: 'DD MMM YYYY', name: 'DD MMM YYYY', example: '15 Mar 2024' },
+    { id: 'MMM DD, YYYY', name: 'MMM DD, YYYY', example: 'Mar 15, 2024' }
+  ];
+
+  const timeFormats = [
+    { id: '12h', name: '12-hour', example: '2:30 PM' },
+    { id: '24h', name: '24-hour', example: '14:30' }
+  ];
+
+  const regions = [
+    { id: 'us', name: 'United States', flag: '🇺🇸' },
+    { id: 'uk', name: 'United Kingdom', flag: '🇬🇧' },
+    { id: 'ca', name: 'Canada', flag: '🇨🇦' },
+    { id: 'au', name: 'Australia', flag: '🇦🇺' },
+    { id: 'de', name: 'Germany', flag: '🇩🇪' },
+    { id: 'fr', name: 'France', flag: '🇫🇷' },
+    { id: 'es', name: 'Spain', flag: '🇪🇸' },
+    { id: 'it', name: 'Italy', flag: '🇮🇹' },
+    { id: 'jp', name: 'Japan', flag: '🇯🇵' },
+    { id: 'kr', name: 'South Korea', flag: '🇰🇷' },
+    { id: 'cn', name: 'China', flag: '🇨🇳' },
+    { id: 'in', name: 'India', flag: '🇮🇳' },
+    { id: 'br', name: 'Brazil', flag: '🇧🇷' },
+    { id: 'mx', name: 'Mexico', flag: '🇲🇽' }
+  ];
+
+  const handleLanguageChange = (languageCode) => {
+    onSettingsChange('localization', {
+      ...settings.localization,
+      language: languageCode
+    });
   };
 
-  const handleSaveSettings = () => {
-    setIsAutoSaving(true);
-    // Simulate API call
-    setTimeout(() => {
-      setHasUnsavedChanges(false);
-      setLastSaved(new Date());
-      setIsAutoSaving(false);
-      alert('Settings saved successfully!');
-    }, 1000);
+  const handleTimezoneChange = (timezone) => {
+    onSettingsChange('localization', {
+      ...settings.localization,
+      timezone
+    });
   };
 
-  const handleResetSettings = () => {
-    if (window.confirm('Are you sure you want to reset all settings to default values? This action cannot be undone.')) {
-      setSettings({
-        display: {
-          theme: 'light',
-          fontSize: 'medium',
-          layoutDensity: 'comfortable',
-          showArticlePreview: true,
-          imageQuality: 'high'
-        },
-        notifications: {
-          breakingNews: true,
-          dailyDigest: true,
-          categoryUpdates: false,
-          bookmarkReminders: true,
-          deliveryTime: 'immediate',
-          subscribedCategories: [],
-          quietHours: {
-            enabled: false,
-            startTime: '22:00',
-            endTime: '08:00'
-          }
-        },
-        privacy: {
-          analytics: false,
-          personalization: false,
-          locationData: false,
-          socialSharing: false,
-          cookies: {
-            essential: true,
-            analytics: false,
-            marketing: false,
-            preferences: false
-          },
-          dataRetention: '30days'
-        },
-        account: {
-          name: '',
-          email: '',
-          bio: '',
-          subscription: 'free'
-        },
-        localization: {
-          language: 'en',
-          timezone: 'UTC+0',
-          dateFormat: 'MM/DD/YYYY',
-          timeFormat: '12h',
-          region: 'us',
-          showLocalNews: false
-        }
-      });
-      setHasUnsavedChanges(true);
-    }
+  const handleDateFormatChange = (format) => {
+    onSettingsChange('localization', {
+      ...settings.localization,
+      dateFormat: format
+    });
   };
 
-  // Auto-save functionality
-  useEffect(() => {
-    if (hasUnsavedChanges) {
-      const autoSaveTimer = setTimeout(() => {
-        handleSaveSettings();
-      }, 5000); // Auto-save after 5 seconds of inactivity
+  const handleTimeFormatChange = (format) => {
+    onSettingsChange('localization', {
+      ...settings.localization,
+      timeFormat: format
+    });
+  };
 
-      return () => clearTimeout(autoSaveTimer);
-    }
-  }, [settings, hasUnsavedChanges]);
+  const handleRegionChange = (region) => {
+    onSettingsChange('localization', {
+      ...settings.localization,
+      region
+    });
+  };
 
-  // Warn before leaving with unsaved changes
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [hasUnsavedChanges]);
+  const handleLocalNewsToggle = (enabled) => {
+    onSettingsChange('localization', {
+      ...settings.localization,
+      showLocalNews: enabled
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-surface">
-      <HeaderNavigation />
-      
-      <main className="pt-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <ContextualBreadcrumbs />
-          
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-3xl font-bold text-primary">Settings</h1>
-                <p className="text-text-secondary mt-2">
-                  Customize your NewsHub experience and manage your account preferences
-                </p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Button
-                  variant="outline"
-                  onClick={handleResetSettings}
-                  iconName="RotateCcw"
-                >
-                  Reset All
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleSaveSettings}
-                  disabled={!hasUnsavedChanges || isAutoSaving}
-                  iconName={isAutoSaving ? "Loader2" : "Save"}
-                  className={isAutoSaving ? "animate-spin" : ""}
-                >
-                  {isAutoSaving ? 'Saving...' : 'Save Changes'}
-                </Button>
-              </div>
-            </div>
-
-            {/* Status Bar */}
-            <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
-              <div className="flex items-center space-x-4">
-                <div className={`status-indicator ${hasUnsavedChanges ? 'status-syncing' : 'status-online'}`}>
-                  <div className={`w-2 h-2 rounded-full mr-2 ${hasUnsavedChanges ? 'bg-warning' : 'bg-success'}`}></div>
-                  <span>{hasUnsavedChanges ? 'Unsaved changes' : 'All changes saved'}</span>
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Last saved: {lastSaved.toLocaleTimeString()}
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-text-secondary">
-                <Icon name="Info" size={14} />
-                <span>Changes are auto-saved after 5 seconds</span>
-              </div>
-            </div>
+    <div className="bg-background border border-border rounded-lg">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between p-6 text-left hover:bg-surface transition-colors duration-200"
+      >
+        <div className="flex items-center space-x-3">
+          <Icon name="Globe" size={20} className="text-accent" />
+          <div>
+            <h3 className="text-lg font-semibold text-primary">Localization Settings</h3>
+            <p className="text-sm text-text-secondary">Language, region, and format preferences</p>
           </div>
-
-          {/* Settings Sections */}
-          <div className="space-y-6">
-            <PrivacyControls 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-            
-            <LocalizationSettings 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-            
-            <AccountManagement 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-          </div>
-
-          {/* Help Section */}
-          <div className="mt-12 p-6 bg-background rounded-lg border border-border">
-            <div className="flex items-center space-x-3 mb-4">
-              <Icon name="HelpCircle" size={20} className="text-accent" />
-              <h3 className="text-lg font-semibold text-primary">Need Help?</h3>
-            </div>
-            <p className="text-text-secondary mb-4">
-              If you're having trouble with any settings or need assistance, we're here to help.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button variant="outline" iconName="Book">
-                Documentation
-              </Button>
-              <Button variant="outline" iconName="MessageCircle">
-                Contact Support
-              </Button>
-              <Button variant="outline" iconName="Video">
-                Video Tutorials
-              </Button>
-              <Button variant="outline" iconName="Users">
-                Community Forum
-              </Button>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <footer className="mt-12 pt-8 border-t border-border text-center text-sm text-text-secondary">
-            <p>
-              © {new Date().getFullYear()} NewsHub. All rights reserved. 
-              <span className="mx-2">•</span>
-              <a href="#" className="text-accent hover:text-accent/80">Privacy Policy</a>
-              <span className="mx-2">•</span>
-              <a href="#" className="text-accent hover:text-accent/80">Terms of Service</a>
-              <span className="mx-2">•</span>
-              <a href="#" className="text-accent hover:text-accent/80">Cookie Policy</a>
-            </p>
-            <p className="mt-2">
-              Version 2.1.0 • Last updated: March 15, 2024
-            </p>
-          </footer>
         </div>
-      </main>
+        <Icon 
+          name="ChevronDown" 
+          size={20} 
+          className={`text-text-secondary transform transition-transform duration-200 ${
+            isExpanded ? 'rotate-180' : ''
+          }`} 
+        />
+      </button>
+
+      {isExpanded && (
+        <div className="px-6 pb-6 space-y-8">
+          {/* Language Selection */}
+          <div>
+            <h4 className="text-sm font-semibold text-primary mb-4">Language</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {languages.map((language) => (
+                <label
+                  key={language.code}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-surface cursor-pointer transition-colors duration-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      name="language"
+                      value={language.code}
+                      checked={settings.localization.language === language.code}
+                      onChange={() => handleLanguageChange(language.code)}
+                      className="w-4 h-4 text-accent border-border focus:ring-accent/20"
+                    />
+                    <div>
+                      <span className="text-sm text-primary font-medium">{language.name}</span>
+                      <p className="text-xs text-text-secondary">{language.nativeName}</p>
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Timezone */}
+          <div>
+            <h4 className="text-sm font-semibold text-primary mb-4">Timezone</h4>
+            <select
+              value={settings.localization.timezone}
+              onChange={(e) => handleTimezoneChange(e.target.value)}
+              className="w-full px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-accent/20 focus:border-accent bg-background"
+            >
+              {timezones.map((timezone) => (
+                <option key={timezone.id} value={timezone.id}>
+                  {timezone.name} - {timezone.location}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Date Format */}
+          <div>
+            <h4 className="text-sm font-semibold text-primary mb-4">Date Format</h4>
+            <div className="space-y-3">
+              {dateFormats.map((format) => (
+                <label
+                  key={format.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-surface cursor-pointer transition-colors duration-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      name="dateFormat"
+                      value={format.id}
+                      checked={settings.localization.dateFormat === format.id}
+                      onChange={() => handleDateFormatChange(format.id)}
+                      className="w-4 h-4 text-accent border-border focus:ring-accent/20"
+                    />
+                    <span className="text-sm text-primary font-medium">{format.name}</span>
+                  </div>
+                  <span className="text-sm text-text-secondary font-mono">{format.example}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Time Format */}
+          <div>
+            <h4 className="text-sm font-semibold text-primary mb-4">Time Format</h4>
+            <div className="space-y-3">
+              {timeFormats.map((format) => (
+                <label
+                  key={format.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-surface cursor-pointer transition-colors duration-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      name="timeFormat"
+                      value={format.id}
+                      checked={settings.localization.timeFormat === format.id}
+                      onChange={() => handleTimeFormatChange(format.id)}
+                      className="w-4 h-4 text-accent border-border focus:ring-accent/20"
+                    />
+                    <span className="text-sm text-primary font-medium">{format.name}</span>
+                  </div>
+                  <span className="text-sm text-text-secondary font-mono">{format.example}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Region */}
+          <div>
+            <h4 className="text-sm font-semibold text-primary mb-4">Region</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {regions.map((region) => (
+                <label
+                  key={region.id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-surface cursor-pointer transition-colors duration-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      name="region"
+                      value={region.id}
+                      checked={settings.localization.region === region.id}
+                      onChange={() => handleRegionChange(region.id)}
+                      className="w-4 h-4 text-accent border-border focus:ring-accent/20"
+                    />
+                    <span className="text-lg">{region.flag}</span>
+                    <span className="text-sm text-primary font-medium">{region.name}</span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Local News */}
+          <div>
+            <h4 className="text-sm font-semibold text-primary mb-4">Local Content</h4>
+            <label className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-surface cursor-pointer transition-colors duration-200">
+              <div>
+                <span className="text-primary font-medium">Show local news</span>
+                <p className="text-xs text-text-secondary">Display news relevant to your region</p>
+              </div>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={settings.localization.showLocalNews || false}
+                  onChange={(e) => handleLocalNewsToggle(e.target.checked)}
+                  className="sr-only"
+                />
+                <div
+                  className={`w-12 h-6 rounded-full transition-colors duration-200 ${
+                    settings.localization.showLocalNews ? 'bg-accent' : 'bg-neutral-300'
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-200 ${
+                      settings.localization.showLocalNews ? 'translate-x-6' : 'translate-x-0.5'
+                    } mt-0.5`}
+                  />
+                </div>
+              </div>
+            </label>
+          </div>
+
+          {/* Preview */}
+          <div className="bg-surface rounded-lg p-4 border border-border">
+            <h4 className="text-sm font-semibold text-primary mb-3">Preview</h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-text-secondary">Current date:</span>
+                <span className="text-primary font-mono">
+                  {dateFormats.find(f => f.id === settings.localization.dateFormat)?.example || '03/15/2024'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-secondary">Current time:</span>
+                <span className="text-primary font-mono">
+                  {timeFormats.find(f => f.id === settings.localization.timeFormat)?.example || '2:30 PM'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-secondary">Language:</span>
+                <span className="text-primary">
+                  {languages.find(l => l.code === settings.localization.language)?.name || 'English'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-secondary">Region:</span>
+                <span className="text-primary">
+                  {regions.find(r => r.id === settings.localization.region)?.flag} {regions.find(r => r.id === settings.localization.region)?.name || 'United States'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default UserSettings;
+export default LocalizationSettings;
