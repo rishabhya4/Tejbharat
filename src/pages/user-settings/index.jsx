@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import HeaderNavigation from '../../components/ui/HeaderNavigation';
 import ContextualBreadcrumbs from '../../components/ui/ContextualBreadcrumbs';
-import AccountManagement from './components/AccountManagement';
 import LocalizationSettings from './components/LocalizationSettings';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
@@ -220,36 +219,6 @@ const UserSettings = () => {
               settings={settings} 
               onSettingsChange={handleSettingsChange} 
             />
-            
-            <AccountManagement 
-              settings={settings} 
-              onSettingsChange={handleSettingsChange} 
-            />
-          </div>
-
-          {/* Help Section */}
-          <div className="mt-12 p-6 bg-background rounded-lg border border-border">
-            <div className="flex items-center space-x-3 mb-4">
-              <Icon name="HelpCircle" size={20} className="text-accent" />
-              <h3 className="text-lg font-semibold text-primary">Need Help?</h3>
-            </div>
-            <p className="text-text-secondary mb-4">
-              If you're having trouble with any settings or need assistance, we're here to help.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button variant="outline" iconName="Book">
-                Documentation
-              </Button>
-              <Button variant="outline" iconName="MessageCircle">
-                Contact Support
-              </Button>
-              <Button variant="outline" iconName="Video">
-                Video Tutorials
-              </Button>
-              <Button variant="outline" iconName="Users">
-                Community Forum
-              </Button>
-            </div>
           </div>
 
           {/* Footer */}
