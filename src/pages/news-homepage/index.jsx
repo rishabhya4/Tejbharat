@@ -7,7 +7,6 @@ import ArticleGrid from './components/ArticleGrid';
 import FloatingActionButton from './components/FloatingActionButton';
 import RefreshIndicator from './components/RefreshIndicator';
 import LoadMoreButton from './components/LoadMoreButton';
-import VerticalRotatingCards from "./components/VerticalRotatingCards";
 
 const NewsHomepage = () => {
   const [articles, setArticles] = useState([]);
