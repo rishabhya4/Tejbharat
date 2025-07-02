@@ -23,7 +23,7 @@ const HeroSection = ({ featuredArticle }) => {
       aspect-[4/3]         // Mobile: taller
       md:aspect-[16/6]     // Desktop: wide and short
       rounded-lg overflow-hidden flex flex-col md:flex-row
-      border border-gray-200 shadow-lg bg-transparent
+      border border-gray-200 bg-transparent
     ">
       {/* Main News (left side) */}
       <div className="relative w-full md:w-2/3 h-full">
