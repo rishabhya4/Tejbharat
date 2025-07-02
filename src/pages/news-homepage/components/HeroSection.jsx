@@ -18,7 +18,13 @@ const HeroSection = ({ featuredArticle }) => {
   }
 
   return (
-    <div className="relative w-full aspect-[16/6] rounded-lg overflow-hidden flex flex-col md:flex-row bg-black border border-gray-200 shadow-lg">
+    <div className="
+      relative w-full
+      aspect-[4/3]         // Mobile: taller
+      md:aspect-[16/6]     // Desktop: wide and short
+      rounded-lg overflow-hidden flex flex-col md:flex-row
+      border border-gray-200 shadow-lg bg-transparent
+    ">
       {/* Main News (left side) */}
       <div className="relative w-full md:w-2/3 h-full">
         <Link
