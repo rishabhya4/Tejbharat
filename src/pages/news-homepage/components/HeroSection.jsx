@@ -70,7 +70,7 @@ const HeroSection = ({ featuredArticle }) => {
       <div className="hidden md:flex w-1/3 h-full bg-background/80 items-start justify-center p-4 overflow-y-auto border-l border-gray-200">
         <div className="w-full flex flex-col gap-4 max-w-xs">
           {/* Politics Card 1 */}
-          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-start transition-transform transition-shadow duration-200 hover:scale-105 hover:shadow-lg">
+          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-start transition-transform transition-shadow duration-200 hover:scale-105 hover:shadow-lg border border-gray-200">
             <span className="inline-block px-2 py-1 mb-2 rounded-full text-xs font-medium bg-red-100 text-red-700">Politics</span>
             <h3 className="text-lg font-bold text-gray-900 mb-2">Parliament Debates New Climate Bill</h3>
             <p className="text-sm text-gray-700 mb-4">Lawmakers discuss a new bill aiming for net-zero emissions by 2040. Experts say this could reshape the nation's energy landscape.</p>
@@ -82,7 +82,7 @@ const HeroSection = ({ featuredArticle }) => {
             </Link>
           </div>
           {/* Politics Card 2 */}
-          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-start transition-transform transition-shadow duration-200 hover:scale-105 hover:shadow-lg">
+          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-start transition-transform transition-shadow duration-200 hover:scale-105 hover:shadow-lg border border-gray-200">
             <span className="inline-block px-2 py-1 mb-2 rounded-full text-xs font-medium bg-red-100 text-red-700">Politics</span>
             <h3 className="text-lg font-bold text-gray-900 mb-2">Election Results Announced</h3>
             <p className="text-sm text-gray-700 mb-4">The latest election brings major changes to parliament, with new leaders promising reform and transparency.</p>
@@ -94,7 +94,7 @@ const HeroSection = ({ featuredArticle }) => {
             </Link>
           </div>
           {/* Politics Card 3 */}
-          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-start transition-transform transition-shadow duration-200 hover:scale-105 hover:shadow-lg">
+          <div className="bg-white rounded-lg shadow-md p-4 flex flex-col items-start transition-transform transition-shadow duration-200 hover:scale-105 hover:shadow-lg border border-gray-200">
             <span className="inline-block px-2 py-1 mb-2 rounded-full text-xs font-medium bg-red-100 text-red-700">Politics</span>
             <h3 className="text-lg font-bold text-gray-900 mb-2">Government Unveils New Education Policy</h3>
             <p className="text-sm text-gray-700 mb-4">A new education policy aims to improve access and quality for students nationwide, focusing on digital learning.</p>
