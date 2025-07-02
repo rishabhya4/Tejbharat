@@ -292,6 +292,16 @@ const HeaderNavigation = () => {
                 ))}
               </nav>
 
+              {/* Mobile Login/Sign Up Buttons */}
+              <div className="flex flex-col space-y-3 pt-4">
+                <Link to="/login" className="btn btn-outline text-base font-medium px-4 py-2 rounded-md border border-red-600 text-red-600 hover:bg-red-50 transition-colors duration-200 w-full text-center">
+                  Login
+                </Link>
+                <Link to="/signup" className="btn btn-primary text-base font-medium px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 w-full text-center">
+                  Sign Up
+                </Link>
+              </div>
+
               {/* Status Indicator */}
               <div className="flex items-center justify-center pt-4 border-t border-border">
                 <div className="status-indicator status-online">
