@@ -194,23 +194,6 @@ const UserSettings = () => {
                 </Button>
               </div>
             </div>
-
-            {/* Status Bar */}
-            <div className="flex items-center justify-between p-4 bg-background rounded-lg border border-border">
-              <div className="flex items-center space-x-4">
-                <div className={`status-indicator ${hasUnsavedChanges ? 'status-syncing' : 'status-online'}`}>
-                  <div className={`w-2 h-2 rounded-full mr-2 ${hasUnsavedChanges ? 'bg-warning' : 'bg-success'}`}></div>
-                  <span>{hasUnsavedChanges ? 'Unsaved changes' : 'All changes saved'}</span>
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Last saved: {lastSaved.toLocaleTimeString()}
-                </div>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-text-secondary">
-                <Icon name="Info" size={14} />
-                <span>Changes are auto-saved after 5 seconds</span>
-              </div>
-            </div>
           </div>
 
           {/* Settings Sections */}
