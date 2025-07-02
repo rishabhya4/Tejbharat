@@ -117,7 +117,7 @@ const NewsHomepage = () => {
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     const featured = mockArticles[0];
-    const remainingArticles = mockArticles.slice(1, 7);
+    const remainingArticles = mockArticles.slice(1, 11);
     
     setFeaturedArticle(featured);
     setArticles(remainingArticles);
@@ -134,7 +134,7 @@ const NewsHomepage = () => {
     // Shuffle articles to simulate new content
     const shuffled = [...mockArticles].sort(() => Math.random() - 0.5);
     const featured = shuffled[0];
-    const remainingArticles = shuffled.slice(1, 7);
+    const remainingArticles = shuffled.slice(1, 11);
     
     setFeaturedArticle(featured);
     setArticles(remainingArticles);
@@ -151,7 +151,7 @@ const NewsHomepage = () => {
     // Simulate load more API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    const newArticles = mockArticles.slice(0, 4).map(article => ({
+    const newArticles = mockArticles.slice(0, 10).map(article => ({
       ...article,
       id: article.id + (page * 10),
       publishedAt: `${page + 1} day${page > 0 ? 's' : ''} ago`
@@ -188,6 +188,19 @@ const NewsHomepage = () => {
     loadInitialData();
   }, [loadInitialData]);
 
+  // Auto-slide featuredArticle every 5 seconds
+  useEffect(() => {
+    if (!mockArticles.length) return;
+    const interval = setInterval(() => {
+      setFeaturedArticle(prev => {
+        const currentIndex = mockArticles.findIndex(a => a.id === prev?.id);
+        const nextIndex = (currentIndex + 1) % mockArticles.length;
+        return mockArticles[nextIndex];
+      });
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [mockArticles]);
+
   return (
     <div className="min-h-screen bg-background">
       <HeaderNavigation />
@@ -200,6 +213,9 @@ const NewsHomepage = () => {
         
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <ContextualBreadcrumbs />
+          
+          {/* Latest News Headline */}
+          <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4">Latest News</h2>
           
           {/* Hero Section */}
           <section className="mb-8">
@@ -214,9 +230,6 @@ const NewsHomepage = () => {
           {/* Articles Grid */}
           <section>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-heading font-bold text-primary">
-                Latest News
-              </h2>
               <span className="text-sm text-text-secondary">
                 {articles.length} articles
               </span>
