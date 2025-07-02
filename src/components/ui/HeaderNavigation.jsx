@@ -193,6 +193,14 @@ const HeaderNavigation = () => {
               <SearchInterface />
             </div>
 
+            {/* Login/Sign Up Buttons */}
+            <Link to="/login" className="btn btn-outline text-sm font-medium px-4 py-2 rounded-md border border-red-600 text-red-600 hover:bg-red-50 transition-colors duration-200 hidden lg:inline-block">
+              Login
+            </Link>
+            <Link to="/signup" className="btn btn-primary text-sm font-medium px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 hidden lg:inline-block">
+              Sign Up
+            </Link>
+
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
