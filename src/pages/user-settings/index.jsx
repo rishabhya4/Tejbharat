@@ -219,6 +219,42 @@ const UserSettings = () => {
               settings={settings} 
               onSettingsChange={handleSettingsChange} 
             />
+
+            {/* Theme Section */}
+            <div>
+              <h4 className="text-sm font-semibold text-primary mb-4">Theme</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  { id: 'light', name: 'Light', icon: 'Sun', description: 'Clean and bright interface' },
+                  { id: 'dark', name: 'Dark', icon: 'Moon', description: 'Easy on the eyes' },
+                  { id: 'auto', name: 'Auto', icon: 'Monitor', description: 'Follows system preference' }
+                ].map((theme) => (
+                  <button
+                    key={theme.id}
+                    onClick={() => handleSettingsChange('display', { ...settings.display, theme: theme.id })}
+                    className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                      settings.display.theme === theme.id
+                        ? 'border-accent bg-accent/5'
+                        : 'border-border hover:border-accent/50 hover:bg-surface'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Icon
+                        name={theme.icon}
+                        size={18}
+                        className={settings.display.theme === theme.id ? 'text-accent' : 'text-text-secondary'}
+                      />
+                      <span className={`font-medium ${
+                        settings.display.theme === theme.id ? 'text-accent' : 'text-primary'
+                      }`}>
+                        {theme.name}
+                      </span>
+                    </div>
+                    <p className="text-xs text-text-secondary">{theme.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Footer */}
