@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import Button from './Button';
 import SearchInterface from './SearchInterface';
+import { useAuth } from "../../contexts/AuthContext";
+
+const DEFAULT_USER_IMG = "/assets/images/default-user.png";
 
 const HeaderNavigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -10,6 +13,9 @@ const HeaderNavigation = () => {
   const location = useLocation();
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const { user, logout } = useAuth();
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef(null);
 
   const navigationItems = [
     { label: 'Home', path: '/news-homepage', icon: 'Home' },
@@ -86,6 +92,22 @@ const HeaderNavigation = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
+    }
+    if (isProfileDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isProfileDropdownOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-header bg-background border-b border-border safe-area-inset-top">
@@ -193,13 +215,51 @@ const HeaderNavigation = () => {
               <SearchInterface />
             </div>
 
-            {/* Login/Sign Up Buttons */}
-            <Link to="/login" className="btn btn-outline text-sm font-medium px-4 py-2 rounded-md border border-red-600 text-red-600 hover:bg-red-50 transition-colors duration-200 hidden lg:inline-block">
-              Login
-            </Link>
-            <Link to="/signup" className="btn btn-primary text-sm font-medium px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 hidden lg:inline-block">
-              Sign Up
-            </Link>
+            {/* User Info or Login/Sign Up Buttons */}
+            {user ? (
+              <div className="relative flex items-center space-x-2">
+                <button
+                  onClick={() => setIsProfileDropdownOpen((v) => !v)}
+                  className="focus:outline-none focus:ring-2 focus:ring-red-200 rounded-full"
+                  aria-label="User menu"
+                >
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="w-8 h-8 rounded-full" />
+                  ) : (
+                    <img src={DEFAULT_USER_IMG} alt="Default Profile" className="w-8 h-8 rounded-full bg-gray-200" />
+                  )}
+                </button>
+                {isProfileDropdownOpen && (
+                  <div ref={profileDropdownRef} className="absolute right-0 mt-2 w-56 z-50">
+                    {/* Caret */}
+                    <div className="flex justify-end pr-6">
+                      <div className="w-3 h-3 bg-white border-t border-l border-border rotate-45 -mb-1"></div>
+                    </div>
+                    <div className="bg-white border border-border rounded-xl shadow-xl py-2 animate-dropdown-fade-in transform transition-transform duration-200 origin-top-right hover:scale-105">
+                      <div className="px-4 py-2 text-sm text-primary font-semibold truncate">
+                        {user.displayName || user.email}
+                      </div>
+                      <div className="border-t border-border my-2"></div>
+                      <button
+                        onClick={() => { setIsProfileDropdownOpen(false); logout(); }}
+                        className="w-full text-left px-4 py-2 text-red-600 rounded-b-lg hover:bg-red-50 hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-700 active:bg-red-700 active:text-white transition-all duration-200 text-sm font-medium"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link to="/signin" className="btn btn-outline text-sm font-medium px-4 py-2 rounded-md border border-red-600 text-red-600 hover:bg-red-50 transition-colors duration-200 hidden lg:inline-block">
+                  Login
+                </Link>
+                <Link to="/signup" className="btn btn-primary text-sm font-medium px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 hidden lg:inline-block">
+                  Sign Up
+                </Link>
+              </>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -292,15 +352,53 @@ const HeaderNavigation = () => {
                 ))}
               </nav>
 
-              {/* Mobile Login/Sign Up Buttons */}
-              <div className="flex flex-col space-y-3 pt-4">
-                <Link to="/login" className="btn btn-outline text-base font-medium px-4 py-2 rounded-md border border-red-600 text-red-600 hover:bg-red-50 transition-colors duration-200 w-full text-center">
-                  Login
-                </Link>
-                <Link to="/signup" className="btn btn-primary text-base font-medium px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 w-full text-center">
-                  Sign Up
-                </Link>
-              </div>
+              {/* Mobile User Info or Login/Sign Up Buttons */}
+              {user ? (
+                <div className="flex flex-col items-center space-y-2 pt-4">
+                  <div className="relative flex items-center space-x-2">
+                    <button
+                      onClick={() => setIsProfileDropdownOpen((v) => !v)}
+                      className="focus:outline-none focus:ring-2 focus:ring-red-200 rounded-full"
+                      aria-label="User menu"
+                    >
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt="Profile" className="w-12 h-12 rounded-full" />
+                      ) : (
+                        <img src={DEFAULT_USER_IMG} alt="Default Profile" className="w-12 h-12 rounded-full bg-gray-200" />
+                      )}
+                    </button>
+                    {isProfileDropdownOpen && (
+                      <div ref={profileDropdownRef} className="absolute right-0 mt-2 w-56 z-50">
+                        {/* Caret */}
+                        <div className="flex justify-end pr-6">
+                          <div className="w-3 h-3 bg-white border-t border-l border-border rotate-45 -mb-1"></div>
+                        </div>
+                        <div className="bg-white border border-border rounded-xl shadow-xl py-2 animate-dropdown-fade-in transform transition-transform duration-200 origin-top-right hover:scale-105">
+                          <div className="px-4 py-2 text-sm text-primary font-semibold truncate">
+                            {user.displayName || user.email}
+                          </div>
+                          <div className="border-t border-border my-2"></div>
+                          <button
+                            onClick={() => { setIsProfileDropdownOpen(false); logout(); }}
+                            className="w-full text-left px-4 py-2 text-red-600 rounded-b-lg hover:bg-red-50 hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-700 active:bg-red-700 active:text-white transition-all duration-200 text-sm font-medium"
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col space-y-3 pt-4">
+                  <Link to="/signin" className="btn btn-outline text-base font-medium px-4 py-2 rounded-md border border-red-600 text-red-600 hover:bg-red-50 transition-colors duration-200 w-full text-center">
+                    Login
+                  </Link>
+                  <Link to="/signup" className="btn btn-primary text-base font-medium px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors duration-200 w-full text-center">
+                    Sign Up
+                  </Link>
+                </div>
+              )}
 
               {/* Status Indicator */}
               <div className="flex items-center justify-center pt-4 border-t border-border">
